@@ -1,0 +1,22 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ encyclopedia_name }}
+{% endblock %}
+
+
+{% block body %}
+    <h1>{{ encyclopedia_name }}</h1>
+    <div class="div-line"></div>
+    <div class="div-breakline"></div>
+    <div>
+        {{ detail|default_if_none:"Word doesn't exist in the encyclopedia." }}
+    </div>
+    <div class="div-breakline"></div>
+    <nav class="navbar navbar-light bg-secondary">
+        <button type="button" class="btn btn-primary">Edit</button>
+    </nav>
+ 
+ {% endblock %}
+
+

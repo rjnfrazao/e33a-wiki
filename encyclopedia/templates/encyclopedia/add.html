@@ -1,0 +1,37 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Add New Entry
+{% endblock %}
+
+
+{% block body %}
+    <h1>Add New Entry</h1>
+    {% if message is not none %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+    <div class="div-form">
+        <form action="{% url "encyclopedia_add" %}" method="post">
+            {% csrf_token %}
+            <div style="display: inline-block;">
+                <div class="div-label">
+                    <label for="name">Name:</label>
+                </div>
+            </div>
+            <div class="div-textbox" style="display: inline-block;">
+                <input class="field" type="textbox" value="{{ form.name.value|default_if_none:""|safe }}"name="name" cols="30" placeholder="">    
+            </div>
+            <div style="clear:both">
+                <div class="div-label" >
+                    <label for="content">Content:</label>
+                </div>
+            </div>
+            <div class="div-textarea">         
+                <textarea class="field" name="content">{{ form.content.value|default_if_none:""|safe }}</textarea>
+            </div>
+            <div class="div-submit">
+                <input type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+{% endblock %}
