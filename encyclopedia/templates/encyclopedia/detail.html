@@ -13,8 +13,15 @@
         {{ detail|default_if_none:"Word doesn't exist in the encyclopedia." }}
     </div>
     <div class="div-breakline"></div>
+    <div class="div-breakline"></div>
+    <div class="div-breakline"></div>
     <nav class="navbar navbar-light bg-secondary">
-        <button type="button" class="btn btn-primary">Edit</button>
+        <form action="{% url "encyclopedia_update" encyclopedia_name %}" method="get">
+            {% csrf_token %}
+            <input class="field" type="hidden" value="{{ encyclopedia_name }}" name="name">
+            <input class="field" type="hidden" value="edit" name="oper">
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
     </nav>
  
  {% endblock %}

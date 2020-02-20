@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -9,6 +10,7 @@
         <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet">
     </head>
     <body>
+    <div class="container-fluid">
         <div class="row">
             <div class="sidebar col-lg-2 col-md-3">
                 <h2>Wiki</h2>
@@ -22,7 +24,7 @@
                     <a href="{% url 'encyclopedia_add' %}">Create New Page</a>
                 </div>
                 <div>
-                    Random Page
+                    <a href="{% url 'encyclopedia_index'  %}?random=Y">Random Page</a>
                 </div>
                 {% block nav %}
                 {% endblock %}
@@ -32,6 +34,6 @@
                 {% endblock %}
             </div>
         </div>
-
+    </div>
     </body>
 </html>

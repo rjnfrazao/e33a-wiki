@@ -13,8 +13,8 @@ h1 {
 }
 
 textarea {
-    height: 90vh;
-    width: 80%;
+    height: 300px;
+    width: 500px
 }
 
 .main {
@@ -66,13 +66,13 @@ textarea {
 }
 
 
-.div-textarea {
+.DELdiv-textarea {
     float: none;
     margin-left: 10px;
     padding-left: 0px;
     padding-top:0px;
-    min-width: 290px;
+    min-width: 500px;
     min-height: 41px;
     vertical-align: middle;
-    width: 50%;    
+    width: 100%;    
 }

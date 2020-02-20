@@ -1,34 +1,63 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    Add New Entry
+    {{ oper_title }}
 {% endblock %}
 
 
 {% block body %}
-    <h1>Add New Entry</h1>
-    {% if message is not none %}
+    <h1>{{ oper_title }}</h1>
+
+    {% if oper == "add" and message is not none %}
         <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
+
     <div class="div-form">
+
+    {% if oper == "add" %}
         <form action="{% url "encyclopedia_add" %}" method="post">
+    {% else %}
+        <form action="{% url "encyclopedia_update" name %}" method="post">
+    {% endif%}
+            <input type="hidden" value="{{ oper }}" name="oper">    
             {% csrf_token %}
-            <div style="display: inline-block;">
-                <div class="div-label">
-                    <label for="name">Name:</label>
+
+
+
+            {% if oper == "add" %}
+                <div style="display: inline-block;">
+                    <div class="div-label">
+                        <label for="name">Name:</label>
+                    </div>
+                </div>            
+                <div class="div-textbox" style="display: inline-block;">
+                    <input class="field" type="textbox" value="{{ form.name.value|default_if_none:""|safe }}" name="name" cols="30" placeholder="">    
                 </div>
-            </div>
-            <div class="div-textbox" style="display: inline-block;">
-                <input class="field" type="textbox" value="{{ form.name.value|default_if_none:""|safe }}"name="name" cols="30" placeholder="">    
-            </div>
+            {% else %}
+                <div style="display: inline-block;">
+                    <div class="div-label">
+                       Name: {{ name }}
+                    </div>
+                </div>            
+                <div class="div-label" style="display: inline-block;">
+                    <input class="field" type="hidden" value="{{ name|default_if_none:""|safe }}" name="name">    
+                </div>
+            {% endif %}
+            
             <div style="clear:both">
                 <div class="div-label" >
                     <label for="content">Content:</label>
                 </div>
             </div>
-            <div class="div-textarea">         
-                <textarea class="field" name="content">{{ form.content.value|default_if_none:""|safe }}</textarea>
-            </div>
+            {% if oper == "add" %}            
+                <div class="div-textarea">         
+                    <textarea class="field" name="content">{{ form.content.value|default_if_none:""|safe }}</textarea>
+                </div>
+            {% else %}
+                 <div class="div-textarea">         
+                    <textarea class="field" name="content">{{ content|default_if_none:""|safe }}</textarea>
+                </div>    
+            {% endif %}       
             <div class="div-submit">
                 <input type="submit" value="Submit">
             </div>

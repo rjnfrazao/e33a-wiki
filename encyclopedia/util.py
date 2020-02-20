@@ -1,4 +1,5 @@
 import re
+import random
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -11,6 +12,7 @@ def list_entries():
     _, filenames = default_storage.listdir("entries")
     return list(sorted(re.sub(r"\.md$", "", filename)
                 for filename in filenames if filename.endswith(".md")))
+
 
 
 def search_entries(search):
@@ -42,12 +44,13 @@ def save_entry(title, content):
     content. If an existing entry with the same title already exists,
     it is replaced.
     """
+
     title.strip                         # Remove the spaces from both sides.
     filename = f"entries/{title}.md"
     if default_storage.exists(filename):
         default_storage.delete(filename)
     default_storage.save(filename, ContentFile(content))
-    return
+    return True
 
 def new_entry(title, content):
     """
@@ -55,6 +58,8 @@ def new_entry(title, content):
     content. If an existing entry with the same title already exists,
     the entry is not saved.
     """
+
+    title.strip                         # Remove the spaces from both sides.
     filename = f"entries/{title}.md"
     if default_storage.exists(filename):
         return False
@@ -72,3 +77,14 @@ def get_entry(title):
         return f.read().decode("utf-8")
     except FileNotFoundError:
         return None
+
+def random_entry():
+    """
+    Retrive an random encyclopedia entry
+    """    
+    
+    files = list_entries()
+    if len(files) == 0:
+        return None
+    i = random.randint(0,len(files)-1)        
+    return files[i]
