@@ -98,7 +98,7 @@ def html_from_markdown(content):
     Bold 
     """   
     # Convert to <strong></strong>
-    regx = re.compile(r"\*\*(.*?)\*\*", re.MULTILINE)
+    regx = re.compile(r"^\*\*(.*?)\*\*", re.MULTILINE)
     content = regx.sub(r"<strong>\1</strong>",content)   
 
     """

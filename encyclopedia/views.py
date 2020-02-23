@@ -36,7 +36,8 @@ def index(request):
 def detail(request, encyclopedia_name):
 
     content = util.get_entry(encyclopedia_name)     # Get the content saved in the file
-    content = util.html_from_markdown(content)      # Convert the markdown into html
+    if content!="":
+        content = util.html_from_markdown(content)      # Convert the markdown into html
     #content = content.replace("\r\n","\n")          # replace carriege and or new linte into <br>, so displays correctly.
     #content = content.replace("\n","<br>")
 
@@ -56,17 +57,22 @@ def search(request):
 
     result_search = util.search_entries(request.GET['q'])
 
-    # The exactly match was found.
-    if isinstance(result_search,str):            
-         return redirect("encyclopedia_detail", encyclopedia_name=result_search)
+    
+    if isinstance(result_search,str): 
+    # The exactly match was found.           
+        return redirect("encyclopedia_detail", encyclopedia_name=result_search)
 
     # More than one entry was found.                
-    else:                                   
+    elif len(result_search)!=0:             
         return render(request, "encyclopedia/index.html", {
             "entries": result_search
         })
-
-    # (PENDING) nOTHING WAS FOUND
+    else:
+    # Search not found
+        return render(request, "encyclopedia/index.html", {
+            "entries": None
+        })
+    
 
 
 #
