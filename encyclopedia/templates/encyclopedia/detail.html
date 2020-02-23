@@ -10,7 +10,9 @@
     <div class="div-line"></div>
     <div class="div-breakline"></div>
     <div>
-        {{ detail|default_if_none:"Word doesn't exist in the encyclopedia." }}
+        {% autoescape off %}
+            {{ detail|default_if_none:"Word doesn't exist in the encyclopedia." }}
+        {% endautoescape %}
     </div>
     <div class="div-breakline"></div>
     <div class="div-breakline"></div>
@@ -22,8 +24,9 @@
             <input class="field" type="hidden" value="edit" name="oper">
             <button type="submit" class="btn btn-primary">Edit</button>
         </form>
+
     </nav>
- 
+
  {% endblock %}
 
 

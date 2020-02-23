@@ -30,13 +30,14 @@ def search_entries(search):
         if filename.endswith(".md"):
             nameonly = re.sub(r"\.md$", "", filename)
             
-            if nameonly == search:
-                print("name only :", nameonly)
-                print("search :", search)
+            if nameonly.lower() == search.lower():
+                #print("name only :", nameonly)
+                #print("search :", search)
                 return (nameonly)
-            elif search in nameonly:
+            elif search.lower() in nameonly.lower():
                 result.append(nameonly)
     return(result)
+
 
 def save_entry(title, content):
     """
@@ -51,6 +52,7 @@ def save_entry(title, content):
         default_storage.delete(filename)
     default_storage.save(filename, ContentFile(content))
     return True
+
 
 def new_entry(title, content):
     """
@@ -82,9 +84,96 @@ def random_entry():
     """
     Retrive an random encyclopedia entry
     """    
-    
+
     files = list_entries()
-    if len(files) == 0:
-        return None
-    i = random.randint(0,len(files)-1)        
-    return files[i]
+    return random.choice(files)
+
+
+def html_from_markdown(content):
+    """
+    Convert a markdown content into html
+    """    
+
+    """
+    Bold 
+    """   
+    # Convert to <strong></strong>
+    regx = re.compile(r"\*\*(.*?)\*\*", re.MULTILINE)
+    content = regx.sub(r"<strong>\1</strong>",content)   
+
+    """
+    Link 
+    """   
+    # Convert to <a>
+    regx = re.compile(r"\[(.*)\]\((.*)\)", re.MULTILINE)
+    content = regx.sub(r"<a href=\2>\1</a>",content)   
+
+    """
+    Paragraph 
+    """   
+    new_content = ""
+    for line in content.splitlines():
+        line = re.sub(r'^(?!#|\*)(.+)', r'<p>\1</p>', line)
+        new_content = new_content + line + "\n"
+    content = new_content
+
+    """
+    Unordered lists
+    """     
+    new_content = ""    
+    u_list = False
+    for line in content.splitlines():
+
+        if len(line) > 0:       # Check the line is not empty
+
+            l = line[:2]
+            if u_list and l!="* ":                      # check if there and unordered list to be closed.
+                new_content = new_content + "</ul>"
+                u_list =  False                         # Flag indicates the unordered list has finished
+
+            #if line[0]!="#" and line[0]!="*":           # Add the paragraph to the line
+            #    line = "<p>" + line + "</p>\n"
+
+            if line[:2]=="* ":                          # Check if the lins is an unordered list
+                if not u_list:                          # Check if it´s the first item of the list
+                    line = "<ul><li>" + line [2:] + "</li>"
+                    u_list = True                       # Flag indicates the unordered list has started.
+                else:
+                    line = "<li>" + line [2:] + "</li>"
+
+        new_content = new_content + line + "\n"
+
+    if u_list :     # in case still have an unordered list to be closed.
+        new_content = new_content + "</ul>"
+
+    content = new_content
+
+    """
+    Headers 
+    """ 
+    # Convert to h1
+    regx = re.compile(r"^#\s(.*?)\n", re.MULTILINE)
+    content = regx.sub(r"<h1>\1</h1>\n",content)                 
+
+    # Convert to h2
+    regx = re.compile(r"^##\s(.*?)\n", re.MULTILINE)
+    content = regx.sub(r"<h2>\1</h2>\n",content)                 
+
+    # Convert to h3
+    regx = re.compile(r"^###\s(.*?)\n", re.MULTILINE)
+    content = regx.sub(r"<h3>\1</h3>\n",content)                 
+
+    # Convert to h4
+    regx = re.compile(r"^####\s(.*?)\n", re.MULTILINE)
+    content = regx.sub(r"<h4>\1</h4>\n",content)                 
+
+    # Convert to h5
+    regx = re.compile(r"^#####\s(.*?)\n", re.MULTILINE)
+    content = regx.sub(r"<h5>\1</h5>\n",content)                 
+
+    # Convert to h6
+    regx = re.compile(r"^######\s(.*?)\n", re.MULTILINE) 
+    content = regx.sub(r"<h6>\1</h6>\n",content)                            
+
+
+    return content

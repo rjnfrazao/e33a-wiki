@@ -34,8 +34,14 @@ def index(request):
 # Displays the detailed page from the encyclopedia item (name) 
 #
 def detail(request, encyclopedia_name):
+
+    content = util.get_entry(encyclopedia_name)     # Get the content saved in the file
+    content = util.html_from_markdown(content)      # Convert the markdown into html
+    #content = content.replace("\r\n","\n")          # replace carriege and or new linte into <br>, so displays correctly.
+    #content = content.replace("\n","<br>")
+
     return render(request, "encyclopedia/detail.html", {
-        "detail": util.get_entry(encyclopedia_name),
+        "detail": content,
         "encyclopedia_name": encyclopedia_name
     })
 
@@ -113,19 +119,15 @@ def add(request):
 def update(request, encyclopedia_name):
 
     if request.method == "POST":
-        print("post ok")
+
         form = NewEntryForm(request.POST)
         if form.is_valid():
-            print("Form Is Valid ok")
             if util.save_entry(form.cleaned_data["name"], 
                 form.cleaned_data["content"]):
-                print("Saved Entry")
                 # Entry updated. Redirect to the entry page.
                 return HttpResponseRedirect(reverse("encyclopedia_detail", 
                     args=[form.cleaned_data["name"]]))
-            
-                # else: Entry does't exit. Error when updating
-                 
+                           
         else: 
             # Form wasn't valid.
             return render(request, "encyclopedia/add.html", {
@@ -135,13 +137,8 @@ def update(request, encyclopedia_name):
                 "oper_title": "Edit Entry"
                 })
     else:
-        print("Get -> Edit operation")  
-        #form = NewEntryForm(request.GET)
-        #form.name = encyclopedia_name
-        content = util.get_entry(encyclopedia_name)
-        print(">>>", encyclopedia_name)   
-        print(">>>", content)
-       
+        # Get method
+        content = util.get_entry(encyclopedia_name)       
         return render(request, "encyclopedia/add.html", {
             "name": encyclopedia_name,
             "content": content,

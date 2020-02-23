@@ -18,13 +18,13 @@
                     <input class="search" type="text" name="q" placeholder="Search Encyclopedia">
                 </form>
                 <div>
-                    <a href="{% url 'encyclopedia_index' %}">Home</a>
+                    <a class="nav-link" href="{% url 'encyclopedia_index' %}">Home</a>
                 </div>
                 <div>
-                    <a href="{% url 'encyclopedia_add' %}">Create New Page</a>
+                    <a class="nav-link" href="{% url 'encyclopedia_add' %}">Create New Page</a>
                 </div>
                 <div>
-                    <a href="{% url 'encyclopedia_index'  %}?random=Y">Random Page</a>
+                    <a class="nav-link" href="{% url 'encyclopedia_index'  %}?random=Y">Random Page</a>
                 </div>
                 {% block nav %}
                 {% endblock %}
